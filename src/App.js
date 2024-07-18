@@ -1,31 +1,61 @@
-import React, { useEffect, useState } from 'react'
-import io from 'socket.io-client'
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
 
-import './App.css'
+const URL = "https://socket-green.vercel.app";
 
+const SocketComponent = () => {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
-
-const socket = io.connect("https://socket-green.vercel.app/");
-const App = () => {
-   const [message,sendMessage]= useState();
-   const Message=()=>{
-    console.log("sending")
-            socket.emit("message",message)
-   }
-
-
-   useEffect(()=>{
-    socket.on("recieved", (data) => {
-      alert(data);
+  useEffect(() => {
+    const socket = io(URL, {
+      transports: ["websocket", "polling"], // Allow both transports
+      withCredentials: true,
     });
-   },[socket])
+
+    socket.on("connect", () => {
+      console.log("Connected to the server", socket.id);
+    });
+
+    socket.on("received", (data) => {
+      console.log("Message received:", data);
+      setMessages((prevMessages) => [...prevMessages, data]);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from the server", socket.id);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const sendMessage = () => {
+    const socket = io(URL, {
+      transports: ["websocket", "polling"], // Allow both transports
+      withCredentials: true,
+    });
+    socket.emit("message", message);
+    setMessage("");
+  };
+
   return (
     <div>
-    
-       <input placeholder='Message' onChange={(e)=>sendMessage(e.target.value)}/>
-       <button onClick={Message}>Send Message</button>
+      <h1>Socket.IO Chat</h1>
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
+      <button onClick={sendMessage}>Send</button>
+      <ul>
+        {messages.map((msg, index) => (
+          <li key={index}>{msg}</li>
+        ))}
+      </ul>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default SocketComponent;
