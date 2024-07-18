@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const URL = "https://socket-green.vercel.app";
+const URL = "https://socket-limk.onrender.com";
 
 const SocketComponent = () => {
   const [message, setMessage] = useState("");
@@ -19,7 +19,7 @@ const SocketComponent = () => {
 
     socket.on("received", (data) => {
       console.log("Message received:", data);
-      setMessages((prevMessages) => [...prevMessages, data]);
+      setMessages(data);
     });
 
     socket.on("disconnect", () => {
