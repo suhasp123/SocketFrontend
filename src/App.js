@@ -5,7 +5,7 @@ import './App.css'
 
 
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect("https://socket-green.vercel.app");
 const App = () => {
    const [message,sendMessage]= useState();
    const Message=()=>{
