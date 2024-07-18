@@ -49,11 +49,7 @@ const SocketComponent = () => {
         onChange={(e) => setMessage(e.target.value)}
       />
       <button onClick={sendMessage}>Send</button>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
+     
     </div>
   );
 };
